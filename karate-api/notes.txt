@@ -1,0 +1,10 @@
+git config --global user.name kevinours-x
+git config --global user.email kevinours.github@gmail.com
+cd karate-api
+git remote remove origin
+git remote add origin https://github.com/kevinours-x/karate-api-exercices.git
+git checkout -b exercices
+
+git add .
+git commit -m "Début des exercices Karate API"
+git push -u origin exercicesKGI
