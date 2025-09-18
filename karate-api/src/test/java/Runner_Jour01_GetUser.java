@@ -2,12 +2,20 @@ import com.intuit.karate.junit5.Karate;
 
 public class Runner_Jour01_GetUser {
 
-   @Karate.Test
+   //@Karate.Test
           // ===== 🟢 JOUR 1 - GetUser01 =====
 
-    Karate Jour1_GetUser01() {
+    //Karate Jour1_GetUser01() {
         // - Découvrir Karate
-        return Karate.run("classpath:features/formation/jour1/Jour01_GetUser.feature");
+        // return Karate.run("classpath:features/formation/jour1/Jour01_GetUser.feature");
+//}
+
+   @Karate.Test
+          // ===== 🟢 JOUR 1 - exercices 04 =====
+
+    Karate Jour1_Excercies4() {
+        // - Découvrir Karate
+        return Karate.run("classpath:features/formation/jour1/04-exercices-jour1.feature");
 }
 
 }
