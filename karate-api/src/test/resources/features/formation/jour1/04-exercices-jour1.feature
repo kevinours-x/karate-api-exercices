@@ -52,13 +52,10 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     When method GET
     Then status 200
     And match response[0] contains { id: 1 }
-#   And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"^[a-zA-Z]{6}@[a-z]{6}.[a-z]{3}$",body:"#string"}      
-#   And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"^[a-zA-Z]{6}[@]{1}[a-z]{7}[.]{1}[a-z]{3}$",body:"#string"}  
     And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"Eliseo@gardner.biz",body:"#string"}      
-#   And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"^[a-z0-9_-]{3,16}$",body:"#string"}      
-    
-#     Eliseo@gardner.biz
-#    [a-zA-Z]@[a-zA-Z].[a-zA-Z]
+    And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"#regex .+@.+\\..+",body:"#string"}  
+    And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"#regex [0-9a-zA-Z]{1,30}@[0-9a-zA-Z]{1,10}\\.[0-9a-zA-Z]{2,3}",body:"#string"}  
+  
 
   Scenario: EXERCICE 5 - Créer votre propre test
     # 📝 DÉFI LIBRE: Inventez votre propre scénario
@@ -68,7 +65,25 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     # - Combiner plusieurs vérifications
     
     # À vous de jouer ! Écrivez votre test ici...
+
+    # vérifier que le nombre de photos du premier album du second utilisateur est bien 50
+    Given path '/albums'
+    And param userId = 2
+    When method GET
+    Then status 200
+    * def idAlbum = response[0].id
+    * print response[0].id
    
+    Given path '/photos'
+    And param albumId = idAlbum
+    When method GET
+    Then status 200
+    * def nbPhotos = response.length
+    * print response.length  
+    And match nbPhotos == 50
+    And match each response == { albumId: "#number", id: "#number",  title: "#string", url: "#regex https.+", thumbnailUrl: "#regex https.+" }
+    And match each response contains { albumId: #(idAlbum) }    
+
   Scenario: EXERCICE 6 - Test de cohérence des données
     # 📝 DÉFI AVANCÉ: Vérifier la logique métier
     # CONSIGNES:
@@ -76,16 +91,18 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     # 2. Récupérer ses commentaires
     # 3. Vérifier que tous les commentaires pointent vers ce post
     
+    * def idPost = 2
+
     Given path '/posts'
-    And param id = 1
+    And param id = idPost
     When method GET
     Then status 200
-    And match response[0] contains { id: 1 }
+    And match response[0] contains { id: #(idPost) }
 
     Given path '/comments'
-    And param postId = 1
+    And param postId = idPost
     When method GET
     Then status 200
-    And match each response contains {postId: 1}
+    And match each response contains {postId: #(idPost)}
     
  
