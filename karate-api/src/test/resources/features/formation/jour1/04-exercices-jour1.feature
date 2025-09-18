@@ -7,7 +7,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
   Background:
     * url 'https://jsonplaceholder.typicode.com'
 
-  Scenario: EXERCICE 1 - Explorer l'API des albums
+  #Scenario: EXERCICE 1 - Explorer l'API des albums
     # 📝 DÉFI: Découvrir une nouvelle ressource
     # CONSIGNES:
     # 1. Récupérer tous les albums (/albums)
@@ -20,7 +20,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     And match len == 100
     And match response[0] contains { userId: "#number", id: "#number"}
 
-  Scenario: EXERCICE 2 - Trouver les albums d'un utilisateur
+  #Scenario: EXERCICE 2 - Trouver les albums d'un utilisateur
     # 📝 DÉFI: Utiliser les paramètres de filtrage
     # CONSIGNES:
     # 1. Récupérer les albums de l'utilisateur 2
@@ -31,7 +31,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     Then status 200
     And response.userId == 2
 
-  Scenario: EXERCICE 3 - Explorer les commentaires
+  #Scenario: EXERCICE 3 - Explorer les commentaires
     # 📝 DÉFI: Découvrir une nouvelle structure de données
     # CONSIGNES:
     # 1. Récupérer tous les commentaires (/comments)
@@ -43,7 +43,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     And match response[0] contains { id: 1 }
     And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"#string",body:"#string"}  
 
-  Scenario: EXERCICE 4 - Validation d'email avec regex
+  #Scenario: EXERCICE 4 - Validation d'email avec regex
     # 📝 DÉFI: Utiliser une expression régulière
     # CONSIGNES:
     # 1. Récupérer un commentaire
@@ -57,7 +57,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     And match response[0] == {postId:"#number",id:"#number",name:"#string",email:"#regex [0-9a-zA-Z]{1,30}@[0-9a-zA-Z]{1,10}\\.[0-9a-zA-Z]{2,3}",body:"#string"}  
   
 
-  Scenario: EXERCICE 5 - Créer votre propre test
+  #Scenario: EXERCICE 5 - Créer votre propre test
     # 📝 DÉFI LIBRE: Inventez votre propre scénario
     # SUGGESTIONS:
     # - Tester /todos (tâches à faire)
@@ -65,6 +65,16 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     # - Combiner plusieurs vérifications
     
     # À vous de jouer ! Écrivez votre test ici...
+
+    * def idTodos = 1
+    Given path '/todos'
+    And param userId = idTodos
+    * print idTodos
+    When method GET
+    Then status 200
+    And match each response == { userId: "#number", id: "#number",  title: "#string", completed: "#boolean" }
+    
+
 
     # vérifier que le nombre de photos du premier album du second utilisateur est bien 50
     Given path '/albums'
@@ -84,7 +94,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     And match each response == { albumId: "#number", id: "#number",  title: "#string", url: "#regex https.+", thumbnailUrl: "#regex https.+" }
     And match each response contains { albumId: #(idAlbum) }    
 
-  Scenario: EXERCICE 6 - Test de cohérence des données
+  #Scenario: EXERCICE 6 - Test de cohérence des données
     # 📝 DÉFI AVANCÉ: Vérifier la logique métier
     # CONSIGNES:
     # 1. Récupérer un post spécifique
@@ -104,5 +114,32 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
     When method GET
     Then status 200
     And match each response contains {postId: #(idPost)}
-    
- 
+
+
+  #Scenario: EXERCICE 7 - CONTROLE DE TOUS LES ZIPCODE   
+    Given path '/users'
+    When method GET
+    Then status 200
+    And match response[*].address.zipcode == "#present"
+    And match response[*].address.zipcode == "#[] #string"    
+
+    And match each response[*].address.zipcode == "#present"
+    And match each response[*].address.zipcode == "#string"      
+   
+
+#Scenario: EXERCICE 8        
+    Given path '/albums'
+    When method GET
+    Then status 200 
+    * def var1 = karate.filter(response, function(u){return u.userId == 2})
+    * def len1 = var1.length
+    And match len1 == 10
+
+
+Scenario: EXERCICE 9    
+  Given path '/albums'
+  When method GET
+  Then status 200
+  * def albumIds = [] 
+  * karate.forEach(response, function(album){albumIds.push(album.id)})
+  And match albumIds == [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]
