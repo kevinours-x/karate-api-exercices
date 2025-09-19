@@ -15,7 +15,8 @@ public class Runner_Jour01_GetUser {
 
     Karate Jour1_Excercies4() {
         // - Découvrir Karate
-        return Karate.run("classpath:features/formation/jour1/04-exercices-jour1.feature");
+        // return Karate.run("classpath:features/formation/jour1/04-exercices-jour1.feature");
+        return Karate.run("classpath:features/formation/jour1/call.feature");
+}
 }
 
-}
