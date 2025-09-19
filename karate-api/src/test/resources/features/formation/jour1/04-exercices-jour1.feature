@@ -4,9 +4,15 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
   # - Résoudre des problèmes concrets
   # - Gagner en autonomie
 
+
   Background:
     #* url 'https://jsonplaceholder.typicode.com'
 * url 'http://localhost:3001/'
+* header Content-Type = 'application/json'
+* header Accept = 'application/json'
+# headers multiples
+#* header { 'Content-Type': 'application/json', 'Accept-Language': 'fr'}
+
 
   #Scenario: EXERCICE 1 - Explorer l'API des albums
     # 📝 DÉFI: Découvrir une nouvelle ressource
@@ -145,7 +151,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
   #* karate.forEach(response, function(album){albumIds.push(album.id)})
   #And match albumIds == [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]
 
- Scenario: EXERCICE 10 - POST
+ #Scenario: EXERCICE 10 - POST
   #Given path '/albums/087e'
   #And param id = "6"
   #When method DELETE
@@ -165,23 +171,122 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
   #* def idNew = response[longueur - 1].id
   #* print idNew  
 
-  Given path '/albums'
-  When method GET
-  Then status 200
-  * def longueur = response.length
-  * print longueur
-  * def idNew = longueur + 1
-  * print idNew  
+  #Given path '/albums'
+  #When method GET
+  #Then status 200
+  #* def longueur = response.length
+  #* print longueur
+  #* def idNew = longueur + 1
+  #* print idNew  
 
-  Given path '/albums'
-  And request {id: "#(idNew)", userId: 1, title: "New Album"}
+  #Given path '/albums'
+  #And request {id: "#(idNew)", userId: 1, title: "New Album"}
+  #When method POST
+  #Then status 201  
+
+  #Given path '/albums'
+  #When method GET
+  #Then status 200
+  #* def longueur = response.length
+  #* print longueur
+  #* def idNew = response[longueur - 1].id
+  #* print idNew
+
+
+  # Scenario: EXERCICE 11 - headers variables (objets)
+  #Given path '/albums'
+  #When method GET
+  #Then status 200
+  #* def longueur = response.length
+  #* print longueur
+  #* def idNew = longueur + 1
+  #* print idNew  
+
+  #* def tableau =
+  #"""
+  #[
+  #  {id: "#(idNew)", userId: 1, title: "New Album"}
+  #  {id: "#(idNew + 1)", userId: 1, title: "New Album"}
+  #]
+  #"""
+
+
+  #Given path '/albums'
+  #And request tableau[0]
+  #When method POST
+  #Then status 201  
+
+  #Given path '/albums'
+  #And request tableau[1]
+  #When method POST
+  #Then status 201  
+
+  #Given path '/albums'
+  #When method GET
+  #Then status 200
+  #* def longueur = response.length
+  #* print longueur
+  #* def idNew = response[longueur - 1].id
+  #* print idNew
+
+Scenario: EXERCICE 12 - PUT/PATCH
+
+  #Given path '/users/049a'
+  #When method DELETE
+  #Then status 200
+
+  #Given path '/users/959c'
+  #When method DELETE
+  #Then status 200
+
+  # créer user
+  * def tableau = 
+  """
+    [
+      {"name": "New User", "username": "newuser", "email": "newuser@example.com"}
+      {"name": "New User (UP)", "username": "newuser (UP)", "email": "newuserUP@example.com"}
+    ]
+  """
+  Given path '/users'
+  And request tableau[0]
   When method POST
-  Then status 201  
+  Then status 201
 
-  Given path '/albums'
+  # vérifier la création
+  Given path '/users'
+  And param name = "New User"
+  And param username = "newuser"  
   When method GET
+  Then status 200  
+  * def idUser = response[0].id
+  * print idUser
+  And match response[0] == { "id": "#(idUser)", "name": "#(tableau[0].name)", "username": "#(tableau[0].username)", "email": "#(tableau[0].email)" }
+  And match response == [{ "id": "#(idUser)", "name": "#(tableau[0].name)", "username": "#(tableau[0].username)", "email": "#(tableau[0].email)" }]
+
+  # modifier user (PATCH)
+  Given path '/users/' + idUser
+  And request   { "name": "#(tableau[1].name)" }
+  When method PATCH
+  Then status 200  
+  * print response.name
+  And match response.name == tableau[1].name
+
+    # modifier user (PUT)
+  Given path '/users/' + idUser
+  And request { "id": "#(idUser)", "name": "#(tableau[1].name)", "username": "#(tableau[1].username)", "email": "#(tableau[1].email)" }
+  #{ "id": "#(idUser)", "name": "New User (UP)", "username": "newuser (UP)", "email": "newuserUP@example.com" }
+  When method PUT
+  Then status 200  
+  * print response.name
+  And match response == { "id": "#(idUser)", "name": "#(tableau[1].name)", "username": "#(tableau[1].username)", "email": "#(tableau[1].email)" }
+  #{ "id": "#(idUser)", "name": "New User (UP)", "username": "newuser (UP)", "email": "newuserUP@example.com" }
+
+  # supprimer user
+  Given path '/users/' + idUser
+  When method DELETE
   Then status 200
-  * def longueur = response.length
-  * print longueur
-  * def idNew = response[longueur - 1].id
-  * print idNew
+
+  #vérifier la suppression
+  Given path '/users/' + idUser
+  When method GET
+  Then status 404
