@@ -4,6 +4,10 @@ Background:
 * url 'https://automation.xelians-dev.fr'
 
 
+
+
+Scenario: X-AM - Création d'un utilisateur avec vérification (JSON dans le code)
+
 * header Accept = 'application/json, text/plain, */*'
 * header Accept-Encoding = 'gzip, deflate, br, zstd'
 * header Content-Type = 'application/json'
@@ -16,8 +20,6 @@ Background:
 * def token = 'TOK-960-BlzI3YCUFLpbnFajWPDYh-eygiFnvofM'
 * header Authorization = 'Bearer ' +  token
 * print token 
-
-Scenario: X-AM - Création d'un utilisateur avec vérification (JSON dans le code)
 
   * def uuidGenerique = java.util.UUID.randomUUID()
 * def emailUser = 'admin.' + uuidGenerique + '@xelians.fr'
@@ -63,7 +65,20 @@ Then status 200
 * print utilisateurID
 * print utilisateurEmail
 
-Given path '/users/'
+* header Accept = 'application/json, text/plain, */*'
+* header Accept-Encoding = 'gzip, deflate, br, zstd'
+* header Content-Type = 'application/json'
+* header Connection = 'keep-alive'
+* header X-Application-Id = 'USERS_APP'
+* header X-Tenant-Id = '10'
+
+# /!\ fonction à implémenter /!\
+# Utiliser le token
+* def token = 'TOK-960-BlzI3YCUFLpbnFajWPDYh-eygiFnvofM'
+* header Authorization = 'Bearer ' +  token
+* print token 
+
+Given path '/identity/identity-api/users/'
 And param id = utilisateurID
 And param email = utilisateurEmail
 When method GET
@@ -72,13 +87,25 @@ Then status 200
 
 
 Scenario: X-AM - Création d'un utilisateur avec vérification (JSON dans un fichier)
+
+* header Accept = 'application/json, text/plain, */*'
+* header Accept-Encoding = 'gzip, deflate, br, zstd'
+* header Content-Type = 'application/json'
+* header Connection = 'keep-alive'
+* header X-Application-Id = 'USERS_APP'
+* header X-Tenant-Id = '10'
+
+* def token = 'TOK-960-BlzI3YCUFLpbnFajWPDYh-eygiFnvofM'
+* header Authorization = 'Bearer ' +  token
+* print token 
+
 * def uuidGenerique = java.util.UUID.randomUUID()
 * def emailUser = 'admin.' + uuidGenerique + '@xelians.fr'
 
 * print uuidGenerique
 * print emailUser
 
-* def requeteFichier = read("classpath:features/formation/jour1/requeteUtilisateur.json")
+* def requeteFichier = read("classpath:data/requeteUtilisateur.json")
 * print requeteFichier
 
 Given path '/identity/identity-api/users/'
@@ -92,9 +119,57 @@ Then status 200
 * print utilisateurID
 * print utilisateurEmail
 
-Given path '/users/'
-And param id = utilisateurID
-And param email = utilisateurEmail
+* header Accept = 'application/json, text/plain, */*'
+* header Accept-Encoding = 'gzip, deflate, br, zstd'
+* header Content-Type = 'application/json'
+* header Connection = 'keep-alive'
+* header X-Application-Id = 'USERS_APP'
+* header X-Tenant-Id = '10'
+
+# /!\ fonction à implémenter /!\
+# Utiliser le token
+* def token = 'TOK-960-BlzI3YCUFLpbnFajWPDYh-eygiFnvofM'
+* header Authorization = 'Bearer ' +  token
+* print token 
+
+Given path '/identity/identity-api/users/' + utilisateurID
+# And param id = utilisateurID
+# And param email = utilisateurEmail
 When method GET
 Then status 200
 * print response
+
+* karate.write(response, 'reponse2.json')
+
+
+
+Scenario: X-AM - helper
+
+* def uuidGenerique = java.util.UUID.randomUUID()
+* def emailUserValeurGenerique = 'admin.' + uuidGenerique + '@xelians.fr'
+
+# création du user
+* def user1 = call read('classpath:helpers/creationUser.feature') {emailUser: "#(emailUserValeurGenerique)"}
+
+#* print user1.response.id
+* def utilisateurID_C = user1.response.id
+* def utilisateurEmail_C = user1.response.email
+* print utilisateurID_C
+* print utilisateurEmail_C
+
+# check user
+* def user2 = call read('classpath:helpers/checkUser.feature') {utilisateurID: "#(utilisateurID_C)", utilisateurEmail: "#(utilisateurEmail_C)"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
