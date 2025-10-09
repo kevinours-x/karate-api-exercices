@@ -6,9 +6,9 @@ public class Runner_Jour01_GetUser {
           // ===== 🟢 JOUR 1 - GetUser01 =====
 
     //Karate Jour1_GetUser01() {
-        // - Découvrir Karate
-        // return Karate.run("classpath:features/formation/jour1/Jour01_GetUser.feature");
-//}
+         //- Découvrir Karate
+         //return Karate.run("classpath:features/formation/jour1/Jour01_GetUser.feature");
+    //}
 
    @Karate.Test
           // ===== 🟢 JOUR 1 - exercices 04 =====
@@ -17,7 +17,7 @@ public class Runner_Jour01_GetUser {
         // - Découvrir Karate
         // return Karate.run("classpath:features/formation/jour1/04-exercices-jour1.feature");
         return Karate.run("classpath:features/formation/jour1/call.feature");
-}
+    }
 
 
 
@@ -27,8 +27,8 @@ public class Runner_Jour01_GetUser {
     Karate JourX_XAM() {
         // - Découvrir Karate
         // return Karate.run("classpath:features/formation/jour1/XAM.feature");
-        return Karate.run("classpath:features/formation/jour1/X-AM.feature");
-}
+        return Karate.run("classpath:features/formation/jour1/Session_2_X-AM.feature");
+    }
 
 
 }
