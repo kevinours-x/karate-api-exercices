@@ -294,7 +294,7 @@ Feature: JOUR 1 - APRÈS-MIDI - Exercices pratiques et consolidation (2h)
   When method GET
   Then status 404
  
-  # Scenario: EXERCICE 13 - Authentification
+# Scenario: EXERCICE 13 - Authentification
 # * def credentials = 'teamdlab:44mUTmCP8REI93QbpogYvVAu'
 # * print credentials
  

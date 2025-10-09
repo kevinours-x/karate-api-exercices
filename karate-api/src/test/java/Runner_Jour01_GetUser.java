@@ -18,5 +18,18 @@ public class Runner_Jour01_GetUser {
         // return Karate.run("classpath:features/formation/jour1/04-exercices-jour1.feature");
         return Karate.run("classpath:features/formation/jour1/call.feature");
 }
+
+
+
+   @Karate.Test
+          // ===== 🟢 JOUR X - XAM =====
+
+    Karate JourX_XAM() {
+        // - Découvrir Karate
+        // return Karate.run("classpath:features/formation/jour1/XAM.feature");
+        return Karate.run("classpath:features/formation/jour1/X-AM.feature");
+}
+
+
 }
 
